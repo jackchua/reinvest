@@ -4,7 +4,7 @@ import urllib
 from math import floor
 from flask import Flask
 from sqlalchemy import *
-from flask import request
+from flask import request, render_template
 import xml.dom.minidom as minidom
 import xml.etree.ElementTree as et
 
