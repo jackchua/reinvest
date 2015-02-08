@@ -110,9 +110,7 @@ def compute_construction_cost_and_rois():
 	
 	# compute current, 5yr and 10yr rent schedule
 	rentQuery = select([_FORECASTS.c.get('Date'),_FORECASTS.c.get('Value')]).where(_FORECASTS.c.get('Region') == region)
-	print rentQuery
 	keys, rents = execute(engine, rentQuery)
-	print rents
 	# set guardrails!!!!!
 	for r in rents:
 		rentForecastDate = r[0]
@@ -142,7 +140,6 @@ def compute_construction_cost_and_rois():
 	totalReturn1Year = 1.+(netRentCurrent*1.+pv1Year)/(price+constructionCost)
 	totalReturn5Year = 1.+(netRentIn5Year*5.+pv5Years)/(price+constructionCost)
 	totalReturn10Year = 1.+(netRentIn10Year*10.+pv10Years)/(price+constructionCost)
-	print totalReturn1Year, totalReturn5Year, totalReturn10Year
 	annualizedROI1Year  = totalReturn1Year - 1
 	annualizedROI5Year  = ((1. + totalReturn5Year)**(1./5.))-1.
 	annualizedROI10Year = ((1. + totalReturn10Year)**(1./10.))-1.
