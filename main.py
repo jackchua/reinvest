@@ -58,6 +58,10 @@ def main():
 
 @app.route("/get_land_data_for_map")
 def get_land_data_for_map():
+	try:
+		callback = request.args.get('JSON_CALLBACK')
+	except:
+		callback = "callback"
 	query = select([_LAND.c.Price,
 		_LAND.c.Latitude,
 		_LAND.c.Longitude,
@@ -66,11 +70,12 @@ def get_land_data_for_map():
 		_LAND.c.Neighborhood])
 	keys,values = execute(engine,query)
 	data = [dict(zip(keys,x)) for x in values]
-	return "JSON_CALLBACK(" + json.dumps(data) + ")"
+	return callback + "(" + json.dumps(data) + ")"
 
 @app.route("/get_land_data_for_fold")
 def get_land_data_for_fold():
 	try:
+		callback = request.args.get('JSON_CALLBACK')
 		price = float(request.args.get('price'))
 		address = request.args.get('address').replace('\s','%20')
 		citystatezip = request.args.get('citystatezip')
@@ -88,7 +93,7 @@ def get_land_data_for_fold():
 		relevantData[f] = data.getElementsByTagName(f)[0].firstChild.nodeValue
 	relevantData['neighborhood'] = data.getElementsByTagName('region')[0].getAttribute('name')
 	relevantData['price'] = price
-	return "JSON_CALLBACK(" + json.dumps(relevantData) + ")"
+	return callback + "(" + json.dumps(relevantData) + ")"
 
 #########################################################################
 # COMPUTE INTERFACE
@@ -96,6 +101,7 @@ def get_land_data_for_fold():
 @app.route("/compute_construction_cost_and_rois")
 def compute_construction_cost_and_rois():
 	try:
+		callback = request.args.get('JSON_CALLBACK')
 		price = float(request.args.get('price'))
 		region = request.args.get('region')
 		floors = float(request.args.get('floors'))
@@ -144,7 +150,7 @@ def compute_construction_cost_and_rois():
 	annualizedROI5Year  = ((1. + totalReturn5Year)**(1./5.))-1.
 	annualizedROI10Year = ((1. + totalReturn10Year)**(1./10.))-1.
 
-	return 'JSON_CALLBACK(' + json.dumps({
+	return callback + '(' + json.dumps({
 		'annualizedReturns' : [annualizedROI1Year, annualizedROI5Year, annualizedROI10Year],
 		'netRents' : [netRentCurrent, netRentIn1Year, netRentIn5Year, netRentIn10Year],
 		'growthRates' : [gr1Year, gr5Years, gr10Years],
