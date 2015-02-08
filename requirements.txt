@@ -2,3 +2,4 @@ boto
 MySQL-Python
 Flask
 Flask-SQLAlchemy
+xmltodict
