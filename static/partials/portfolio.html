@@ -6,7 +6,19 @@
 	
 	<ul>
 		<li ng-repeat="property in portfolio">
+			<h3>{{ landData[property]["Address"] }}</h3>
+			<div class="b5">{{ landData[property]["City"] }}, {{ landData[property]["State"] }} &bull; {{ landData[property]["Neighborhood"] }}</div>
+			<p class="b1">{{ landData[property]["Price"] | currency:"$":0 }}<br/>Lot size: <span ng-if="landData[property].lotSizeSqFt">{{ landData[property]["lotSizeSqFt"] | number }} ft<sup>2</sup></span><span ng-if="! landData[property].lotSizeSqFt">unknown</span></p>
+			<div class="h5">Construction costs and ROI</div>
 			
+			<p>Floors: {{ landData[property]["usableSqFt"] | number }}<br/>
+			Usable ft<sup>2</sup>: {{ landData[property]["usableSqFt"] | number }}</br>
+			Construction cost: {{ landData[property]["constructionCost"] | currency:"$":0 }}</br>
+			Units: {{ landData[property]["units"] | number }}</br>
+			Cap rate: {{ landData[property]["capRate"]* 100| number }}%
+			</p>
+			
+			<hr/>
 		</li>
 	</ul>
 	

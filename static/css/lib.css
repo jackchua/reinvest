@@ -50,7 +50,7 @@ hr,
 	border: none;
 	display: block;
 	height: 1px;
-	margin: 30px auto;
+	margin: 15px auto;
 	padding: 0;
 	width: 100%;
 }
@@ -213,7 +213,6 @@ h3, .h3 {
 	color: #000;
 	font-family: 'LatoLight';
 	font-size: 30px;
-	margin: 0 0 10px;
 }
 h4, .h4 {
 	color: #484848;
