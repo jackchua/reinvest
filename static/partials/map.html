@@ -1,1 +1,65 @@
-<ui-gmap-google-map center='map.center' zoom='map.zoom'></ui-gmap-google-map>
+<div id="map-view-container" class="map-view-container" ng-class="{ 'fold-open': foldOpen}">
+	<ui-gmap-google-map center='map.center' zoom='map.zoom' bounds='map.bounds'>
+		<ui-gmap-markers models="markers" coords="'self'" icon="'icon'" fit="true" click="'onClicked'">
+        </ui-gmap-markers>
+	</ui-gmap-google-map>
+	<div class="fold" ng-if="currentMarkerProperty.Address">
+		<h3>{{ currentMarkerProperty["Address"] }}</h3>
+		<div class="b5">{{ currentMarkerProperty["City"] }}, {{ currentMarkerProperty["State"] }} &bull; {{ currentMarkerProperty["Neighborhood"] }}</div>
+		<p class="b1">{{ currentMarkerProperty["Price"] | currency:"$":0 }}<br/>Lot size: <span ng-if="currentMarkerProperty.lotSizeSqFt">{{ currentMarkerProperty["lotSizeSqFt"] | number }} ft<sup>2</sup></span><span ng-if="! currentMarkerProperty.lotSizeSqFt">unknown</span></p>
+		<hr/>
+		<div class="h5">Construction costs and ROI</div>
+		
+		<p ng-if="!currentMarkerProperty.lotSizeSqFt || missingData">Sorry, we do not have enough data to calculate costs and ROI.</p>
+		<div ng-if="currentMarkerProperty.lotSizeSqFt && !missingData">
+			<div class="toggler">Floors: <input type="number" name="input" ng-model="currentMarkerProperty.floors" min="1" ng-change="updateFloors()" /> </div>
+			<div class="clear"></div>
+			<p ng-if="recalculating">Recalculating...</p>
+			<div ng-if="!recalculating">
+				Usable ft<sup>2</sup>: {{ currentMarkerProperty["usableSqFt"] | number }}</br>
+				Construction cost: {{ currentMarkerProperty["constructionCost"] | currency:"$":0 }}</br>
+				Units: {{ currentMarkerProperty["units"] | number }}</br>
+				Cap rate: {{ currentMarkerProperty["capRate"]* 100| number }}%
+				</div>
+								
+				<table class="property-table" align="center">
+					<thead>
+						<th></th>
+						<th>Current</th>
+						<th>1 year</th>
+						<th>5 years</th>
+						<th>10 years</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Property Value</td>
+							<td ng-repeat="value in currentMarkerProperty.propertyValues">{{ value | currency:"$":0 }}</td>
+						</tr>
+						<tr>
+							<td>Net rents</td>
+							<td ng-repeat="value in currentMarkerProperty.netRents">{{ value | currency:"$":0 }}</td>
+						</tr>
+						<tr>
+							<td>Annualized returns</td>
+							<td></td>
+							<td ng-repeat="value in currentMarkerProperty.annualizedReturns">{{ value * 100| number }}%</td>
+						</tr>
+						<tr>
+							<td>Total returns</td>
+							<td></td>
+							<td ng-repeat="value in currentMarkerProperty.totalReturns">{{ value * 100| number }}%</td>
+						</tr>						
+						<tr>
+							<td>Growth rates</td>
+							<td></td>
+							<td ng-repeat="value in currentMarkerProperty.growthRates">{{ value * 100| number }}%</td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<a class="btn" ng-if="showAddButton(currentMarkerID)" ng-click="addToPortfolio(currentMarkerID)">Add to portfolio</a>
+				<p ng-if="! showAddButton(currentMarkerID)">This property is in the portfolio. <a ng-click="removeFromPortfolio(currentMarkerID)">Remove</a> </p>
+				
+			</div>
+	</div>
+</div>
