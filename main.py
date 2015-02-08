@@ -64,7 +64,7 @@ def add_args_to_api_call(apiBase, apiArgs={}):
 
 @app.route("/")
 def main():
-	return "Hello World!"
+	return render_template('index.html')
 
 @app.route("/get_land_data_for_map")
 def get_land_data_for_map():
