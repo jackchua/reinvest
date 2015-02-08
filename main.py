@@ -66,7 +66,7 @@ def get_land_data_for_map():
 		_LAND.c.Neighborhood])
 	keys,values = execute(engine,query)
 	data = [dict(zip(keys,x)) for x in values]
-	return "callback(" + json.dumps(data) + ")"
+	return "JSON_CALLBACK(" + json.dumps(data) + ")"
 
 @app.route("/get_land_data_for_fold")
 def get_land_data_for_fold():
@@ -88,7 +88,7 @@ def get_land_data_for_fold():
 		relevantData[f] = data.getElementsByTagName(f)[0].firstChild.nodeValue
 	relevantData['neighborhood'] = data.getElementsByTagName('region')[0].getAttribute('name')
 	relevantData['price'] = price
-	return "callback(" + json.dumps(relevantData) + ")"
+	return "JSON_CALLBACK(" + json.dumps(relevantData) + ")"
 
 #########################################################################
 # COMPUTE INTERFACE
@@ -144,7 +144,7 @@ def compute_construction_cost_and_rois():
 	annualizedROI5Year  = ((1. + totalReturn5Year)**(1./5.))-1.
 	annualizedROI10Year = ((1. + totalReturn10Year)**(1./10.))-1.
 
-	return 'callback(' + json.dumps({
+	return 'JSON_CALLBACK(' + json.dumps({
 		'annualizedReturns' : [annualizedROI1Year, annualizedROI5Year, annualizedROI10Year],
 		'netRents' : [netRentCurrent, netRentIn1Year, netRentIn5Year, netRentIn10Year],
 		'growthRates' : [gr1Year, gr5Years, gr10Years],
