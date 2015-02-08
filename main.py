@@ -26,9 +26,19 @@ _CAP_RATE_SCHEDULE = {
 	3000000 : 0.08,
 	4000000 : 0.085,
 	5000000 : 0.09,
+	6000000 : 0.09,
+	7000000 : 0.09,
+	8000000 : 0.09,
+	9000000 : 0.09,
 	10000000 : 0.10,
 	20000000 : 0.15,
-	40000000 : 0.20
+	30000000 : 0.15,
+	40000000 : 0.20,
+	50000000 : 0.20,
+	60000000 : 0.20,
+	70000000 : 0.20,
+	80000000 : 0.20,
+	90000000 : 0.20
 }
 
 #####################################################################
@@ -63,6 +73,7 @@ def get_land_data_for_map():
 	query = select([_LAND.c.Price,
 		_LAND.c.Latitude,
 		_LAND.c.Longitude,
+		_LAND.c.Address,
 		_LAND.c.City,
 		_LAND.c.State,
 		_LAND.c.Neighborhood])
@@ -132,7 +143,10 @@ def compute_construction_cost_and_rois():
 			netRentIn10Year = cappedRent*usableSqFt*_OPERATING_MARGIN*12
 	
 	# compute current, 5yr and 10yr property appreciation schedule
-	closestConstructionCost = floor(int(min([abs(x-constructionCost) for x in _CAP_RATE_SCHEDULE.keys()])+constructionCost)/1000000)*1000000
+	if constructionCost < 10000000:
+		closestConstructionCost = floor(int(min([abs(x-constructionCost) for x in _CAP_RATE_SCHEDULE.keys()])+constructionCost)/1000000)*1000000
+	else:
+		closestConstructionCost = floor(int(min([abs(x-constructionCost) for x in _CAP_RATE_SCHEDULE.keys()])+constructionCost)/10000000)*10000000
 	capRate = _CAP_RATE_SCHEDULE[closestConstructionCost]
 	pvCurrent = netRentCurrent / capRate
 	homeQuery = select([_ZHVI.c.get('Yo Y'),_ZHVI.c.get('5 Year'),_ZHVI.c.get('10 Year')]).where(_ZHVI.c.get('Region Name') == region)
@@ -143,14 +157,17 @@ def compute_construction_cost_and_rois():
 	pv10Years = pvCurrent*(1+gr10Years)**10
 
 	# compute 5yr and 10yr roi
-	totalReturn1Year = 1.+(netRentCurrent*1.+pv1Year)/(price+constructionCost)
-	totalReturn5Year = 1.+(netRentIn5Year*5.+pv5Years)/(price+constructionCost)
-	totalReturn10Year = 1.+(netRentIn10Year*10.+pv10Years)/(price+constructionCost)
-	annualizedROI1Year  = totalReturn1Year - 1
+	totalReturn1Year = (netRentCurrent*1.+pv1Year-(price+constructionCost))/(price+constructionCost)
+	totalReturn5Year = ((netRentCurrent+netRentIn5Year)*(5./2.)+pv5Years-(price+constructionCost))/(price+constructionCost)
+	totalReturn10Year = ((netRentIn10Year+netRentCurrent)*(10./2.)+pv10Years-(price+constructionCost))/(price+constructionCost)
+	annualizedROI1Year  = ((1. + totalReturn1Year)**(1./1.)) - 1
 	annualizedROI5Year  = ((1. + totalReturn5Year)**(1./5.))-1.
 	annualizedROI10Year = ((1. + totalReturn10Year)**(1./10.))-1.
 
 	return callback + '(' + json.dumps({
+		'landPrice' : price,
+		'usableSqFt' : usableSqFt,
+		'capRate'  : capRate,
 		'annualizedReturns' : [annualizedROI1Year, annualizedROI5Year, annualizedROI10Year],
 		'netRents' : [netRentCurrent, netRentIn1Year, netRentIn5Year, netRentIn10Year],
 		'growthRates' : [gr1Year, gr5Years, gr10Years],
