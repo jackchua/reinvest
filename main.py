@@ -59,7 +59,7 @@ def main():
 @app.route("/get_land_data_for_map")
 def get_land_data_for_map():
 	try:
-		callback = request.args.get('JSON_CALLBACK')
+		callback = request.args.get('callback')
 	except:
 		callback = "callback"
 	query = select([_LAND.c.Price,
@@ -75,7 +75,7 @@ def get_land_data_for_map():
 @app.route("/get_land_data_for_fold")
 def get_land_data_for_fold():
 	try:
-		callback = request.args.get('JSON_CALLBACK')
+		callback = request.args.get('callback')
 		price = float(request.args.get('price'))
 		address = request.args.get('address').replace('\s','%20')
 		citystatezip = request.args.get('citystatezip')
@@ -101,7 +101,7 @@ def get_land_data_for_fold():
 @app.route("/compute_construction_cost_and_rois")
 def compute_construction_cost_and_rois():
 	try:
-		callback = request.args.get('JSON_CALLBACK')
+		callback = request.args.get('callback')
 		price = float(request.args.get('price'))
 		region = request.args.get('region')
 		floors = float(request.args.get('floors'))
