@@ -76,7 +76,8 @@ def get_land_data_for_map():
 		_LAND.c.Address,
 		_LAND.c.City,
 		_LAND.c.State,
-		_LAND.c.Neighborhood])
+		_LAND.c.Neighborhood,
+                _LAND.c.Address])
 	keys,values = execute(engine,query)
 	data = [dict(zip(keys,x)) for x in values]
 	return callback + "(" + json.dumps(data) + ")"
