@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en" ng-app="reinvestApp">
+<head>
+  	<meta charset="utf-8">
+	<!-- <base href="/"> -->
+  	<title>ReInvest</title>
+  	<link rel="stylesheet" href="css/lib.css"/>
+	<link rel="stylesheet" href="css/app.css"/>
+	<link rel="shortcut icon" href="favicon.ico">
+</head>
+<body>
+	<nav>
+		<div class="wrapper">
+			<div class="row">
+			<h1><a ui-sref="homeView" class="logo h5">ReInvest</a></h1>
+			<a ui-sref="mapView" class="h5" ng-class="{active: ($state.current.name === 'mapView')}">Search</a>
+			<a ui-sref="portfolioView" class="h5"  ng-class="{active: ($state.current.name === 'portfolioView')}">Portfolio</a>
+			</div>
+		</div>
+	</nav>
+	<div ui-view></div>
+</body>
+    <script src="js/lib.js"></script>
+	<script src="js/app.js"></script>
+	<script src="js/controllers.js"></script>
+</html>
