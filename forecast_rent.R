@@ -70,8 +70,9 @@ gen_forecastDF = function(df,nmonth_forecast) {
 
 df = read.csv(ZRIfile)
 
-forecast12df = gen_forecastDF(df, 12)
-write.table(forecast12df, 'Seattle_Neighborhood_Median_Rental_Price_Per_Sqft_All_Homes_12monthforecast.csv', row.names=F, col.names =T, quote=F, sep=",")
-
-forecast60df = gen_forecastDF(df, 60)
-write.table(forecast12df, 'Seattle_Neighborhood_Median_Rental_Price_Per_Sqft_All_Homes_60monthforecast.csv', row.names=F, col.names =T, quote=F, sep=",")
+# forecast rent per sqft for next decade
+forecast120df = gen_forecastDF(df, 120)
+# get point estimate at 0, 1, 5 and 10 year horizon
+date_horizon = as.Date(c("2014-11-01", "2015-11-01", "2019-11-01", "2024-11-01"))
+subdf = subset(forecast120df, City=="Seattle" & date %in% date_horizon)
+write.table(subdf, 'Seattle_Neighborhood_Median_Rental_Price_Per_Sqft_All_Homes_forecast_0_1_5_10y.csv', row.names=F, col.names =T, quote=F, sep=",")
