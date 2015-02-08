@@ -4,7 +4,7 @@ import urllib
 from math import floor
 from flask import Flask
 from sqlalchemy import *
-from flask import request
+from flask import request, render_template
 import xml.dom.minidom as minidom
 import xml.etree.ElementTree as et
 
@@ -64,7 +64,7 @@ def add_args_to_api_call(apiBase, apiArgs={}):
 
 @app.route("/")
 def main():
-	return "Hello World!"
+	return render_template('index.html')
 
 @app.route("/get_land_data_for_map")
 def get_land_data_for_map():
